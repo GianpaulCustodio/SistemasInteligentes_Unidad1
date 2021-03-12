@@ -15,19 +15,17 @@ from googletrans import Translator
 from pdfminer.high_level import extract_text
 nltk.download('punkt')
 nltk.download('stopwords')
-#Librería para la polaridad
-from textblob import TextBlob
-#Librería para leer txt utf-8
-import codecs
 
 def PdfToHTML():
     #Insertamos el PDF(1)
-    pdf = "Celula.pdf"
+    pdf = "Lectura1.pdf"
     documento = fitz.open(pdf)
     pagina = documento.loadPage(0)
     doc = fitz.open(pdf)
     salida = open(pdf+".html","wb")
+    #salida = open(pdf+".txt","wb") -> .txt(1)
     for pagina in doc:
+        #texto = pagina.getText().encode("utf8") .txt(2)
         texto = pagina.getText("html").encode("utf8")
         salida.write(texto)
         salida.write(b"\n--------------------\n")
@@ -36,7 +34,7 @@ def PdfToHTML():
 
 def Resumen():
     #Insertamos el PDF(2)
-    pdfTohtml = extract_text("Celula.pdf")
+    pdfTohtml = extract_text("Lectura1.pdf")
     articulo_texto = pdfTohtml
     articulo_texto = articulo_texto.replace("[ edit ]", "")
     print ("#########################")
@@ -50,7 +48,7 @@ def Resumen():
 
     formatear_articulo = re.sub('[^a-zA-Z]', ' ', articulo_texto )  
     formatear_articulo = re.sub(r'\s+', ' ', formatear_articulo)  
-    #nltk.download()
+
     #EN ESTA PARTE HACE LA TOKENIZACION 
     lista_palabras = nltk.sent_tokenize(articulo_texto)  
 
@@ -94,19 +92,10 @@ def Resumen():
     translate = translator.translate(resumen, src="es", dest="es")
 
     #Guardar en .txt
-    resumenpdf = open ("Resumen.txt","w")
+    resumenpdf = open ("Resumenn.txt","w")
     resumenpdf.write("Resumen del texto:\n" + translate.text)
     resumenpdf.close()
-    Polaridad()
     
-def Polaridad():
-    resumenTxt=codecs.open("Resumen.txt","r")
-    lectura=resumenTxt.read()
-    t=TextBlob(lectura)
-    ten = t.translate(to="en")
-    polaridadLista = list(ten.sentiment)
-    polaridad = open ("Polaridad.txt","w")
-    polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1]))
-    polaridad.close()
 
 PdfToHTML()
+

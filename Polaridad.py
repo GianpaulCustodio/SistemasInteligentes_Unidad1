@@ -3,25 +3,19 @@ import codecs
 #Librería para Polaridad
 from textblob import TextBlob
 
-#Lectura de txt
-# resumenTxt=codecs.open("oli.txt","r","utf-8")
-# lectura=resumenTxt.read()
-# resumenTxt.close()
-# print(lectura)
-
-# resumenTxt=codecs.open("Resumen.txt","r")
-# lectura=resumenTxt.read()
-# t=TextBlob(lectura)
-# ten = t.translate(to="en")
-#print(ten.sentiment,"\n")
-
-resumenTxt=codecs.open("oli.txt","r")
+resumenTxt=codecs.open("MensajePrueba.txt","r")
 lectura=resumenTxt.read()
 t=TextBlob(lectura)
 ten = t.translate(to="en")
-
 polaridadLista = list(ten.sentiment)
-#polaridadFinal = " ".join(polaridadLista)
 polaridad = open ("Polaridad.txt","w")
-polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1]))
+if polaridadLista[0]<0:
+    polaridad.write("OPINIÓN NEGATIVA\n\n")
+    polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
+elif polaridadLista[0]==0:
+    polaridad.write("OPINIÓN NEUTRAL\n\n")
+    polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
+elif polaridadLista[0]>0 and polaridadLista[0] <=1:
+    polaridad.write("OPINIÓN POSITIVA\n\n")
+    polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
 polaridad.close()
