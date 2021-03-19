@@ -1,6 +1,3 @@
-#Librería PDF -> HTML
-import fitz
-#Librería para Realizar Resumen 
 import bs4 as bs  
 import urllib.request  
 import re
@@ -15,25 +12,6 @@ from googletrans import Translator
 from pdfminer.high_level import extract_text
 nltk.download('punkt')
 nltk.download('stopwords')
-#Librería para la polaridad
-from textblob import TextBlob
-#Librería para leer txt utf-8
-import codecs
-
-def PdfToHTML():
-    #Insertamos el PDF(1)
-    pdf = "Lectura1.pdf"
-    documento = fitz.open(pdf)
-    pagina = documento.loadPage(0)
-    doc = fitz.open(pdf)
-    salida = open(pdf+".html","wb")
-    for pagina in doc:
-        texto = pagina.getText("html").encode("utf8")
-        salida.write(texto)
-        salida.write(b"\n--------------------\n")
-    salida.close()
-    Resumen()  
-
 def Resumen():
     #Insertamos el PDF(2)
     pdfTohtml = extract_text("Lectura1.pdf")
@@ -97,27 +75,5 @@ def Resumen():
     resumenpdf = open("Resumen.txt","w")
     resumenpdf.write("Resumen del texto:\n" + translate.text)
     resumenpdf.close()
-    Polaridad()
-    
-def Polaridad():
-    translator = Translator()
-    resumenTxt = codecs.open("Resumen.txt","r")
-    lectura=resumenTxt.read()
-    translate = translator.translate(lectura, src="es", dest="en")
-    t=TextBlob(translate.text)
-    t = t.sentiment
-    #print(list(t))
-    polaridadLista = list(t)
-    polaridad = open ("Polaridad.txt","w")
-    if polaridadLista[0]<0:
-        polaridad.write("OPINIÓN NEGATIVA\n\n")
-        polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
-    elif polaridadLista[0]==0:
-        polaridad.write("OPINIÓN NEUTRAL\n\n")
-        polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
-    elif polaridadLista[0]>0 and polaridadLista[0] <=1:
-        polaridad.write("OPINIÓN POSITIVA\n\n")
-        polaridad.write("POLARIDAD:" + str(polaridadLista[0])+"\nSUBJETIVIDAD: " + str(polaridadLista[1])+"\n")
-    polaridad.close()
 
-PdfToHTML()
+Resumen()
